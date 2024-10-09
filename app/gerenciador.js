@@ -1,47 +1,45 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Checkbox from 'expo-checkbox';
-import Feather from '@expo/vector-icons/Feather'
+import Feather from '@expo/vector-icons/Feather';
 
 let id = 0;
 
 export default function Task() {
-    const [title, setTitle] = useState("")
+    const [title, setTitle] = useState("");
     const [tasks, setTasks] = useState([]);
 
     const handleCreateTask = () => {
+        if (!title) return; // Evita adicionar tarefas vazias
         const newTasks = [...tasks, {
             id,
             title,
             isFinished: false,
-        }]
+        }];
 
         id++;
 
         setTasks(newTasks);
         setTitle("");
-    }
+    };
 
-    const handleCheckTask = (id) => {
+    const handleCheckTask = (taskId) => {
         const newTasks = tasks.map((item) => {
-            if (item.id === id) {
-                item.isFinished = !item.isFinished;
+            if (item.id === taskId) {
+                return { ...item, isFinished: !item.isFinished }; // Alterna o estado de conclusão
             }
-
             return item;
         });
 
         setTasks(newTasks);
-    }
+    };
 
-    const handleDeleteTask = (id) => {
-        const newTasks = tasks.filter(
-            item => item.id !== id
-        );
+    const handleDeleteTask = (taskId) => {
+        const newTasks = tasks.filter(item => item.id !== taskId);
         setTasks(newTasks);
-    }
+    };
 
     return (
         <SafeAreaProvider>
@@ -52,7 +50,7 @@ export default function Task() {
                     <FlatList
                         data={tasks}
                         style={styles.listTasks}
-                        keyExtractor={(item) => item.id}
+                        keyExtractor={(item) => String(item.id)} // Converte id para string
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={{ gap: 10 }}
                         renderItem={({ item }) => (
@@ -82,7 +80,7 @@ export default function Task() {
                             placeholder="Insira o nome da tarefa"
                             placeholderTextColor={"#ABABAB"}
                             value={title}
-                            onChangeText={(text) => setTitle(text)}
+                            onChangeText={setTitle}
                         />
                         <TouchableOpacity style={styles.button} onPress={handleCreateTask}>
                             <Text style={styles.textButton}>
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#BB86FC",
         padding: 20,
         width: "100%",
-        borderRadius: 10
+        borderRadius: 10,
     },
     textButton: {
         color: "#fff",
@@ -154,16 +152,16 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
     },
     text: {
         color: "#FFFFFF",
         fontSize: 20,
-        width: "70%"
+        width: "70%",
     },
     checkbox: {
         borderRadius: 5,
         width: 25,
-        height: 25
-    }
+        height: 25,
+    },
 });

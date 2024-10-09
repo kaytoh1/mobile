@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { StyleSheet, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar'
-import { useRouter } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import { Input } from './src/components/Input';
 import { Divider } from './src/components/Divider';
 import { Link } from './src/components/Link';
@@ -11,15 +11,12 @@ import { Button } from './src/components/Button';
 export default function Login() {
     const [email, setEmail] = useState("")
     const [senha, setSenha] = useState("")
-    const [logged, setLogged] = useState(false); // Altere para false por padrão
-    const router = useRouter();
-  
+    const navigation = useNavigation();
+
     function entrar() {
-      if (email && senha) {
-        setLogged(true);
-        router.push('/gerenciador'); // Navegar para a tela de gerenciador
-      } else {
-        console.log("Por favor, preencha todos os campos.");
+      if(email && senha){
+        console.log(email, senha)
+        navigation.push("Task")
       }
     }
 
